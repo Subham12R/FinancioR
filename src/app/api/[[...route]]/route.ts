@@ -6,7 +6,7 @@ import accounts from './accounts';
 
 export const runtime = 'edge';
 export type AppType = typeof routes;
-
+ 
 const app = new Hono().basePath('/api');
 
 app.get('/hello', (c) => {
@@ -14,7 +14,8 @@ app.get('/hello', (c) => {
 });
 
 
-const routes = app.route('/accounts', accounts);
+export const routes = app.route('/accounts', accounts);
+
 
 export const GET = handle(app);
 export const POST = handle(app);

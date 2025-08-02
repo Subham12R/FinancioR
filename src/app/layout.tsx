@@ -5,6 +5,7 @@ import {
 import { Geist, Geist_Mono, } from 'next/font/google'
 import './globals.css'
 import { QueryProvider } from '../../providers/query-provider'
+import { SheetProvider } from '../../providers/sheet-provider'
 
 
 
@@ -70,6 +71,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <QueryProvider>
+            <SheetProvider />
             {children}
           </QueryProvider>
         </body>
