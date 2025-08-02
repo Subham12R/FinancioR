@@ -1,34 +1,26 @@
 'use client'
+import { Loader2 } from "lucide-react";
+import { ClerkLoaded, SignIn, ClerkLoading } from "@clerk/nextjs";
 
-import { Loader2 } from 'lucide-react';
-import { SignIn, ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
-import React from 'react';
-import Particles from '@/components/Particles/Particles';
 
-const SignInPage = () => {
-  return (
-    <div className='relative min-h-screen w-full grid grid-cols-1 bg-zinc-900'>
-      {/* Background Particles */}
-      <div className='absolute inset-0 z-0'>
-        <Particles />
-      </div>
+export default function SignInPage() {
+    return (
+        <>
+        <main className="relative min-h-screen overflow-hidden flex justify-center items-center bg-[#102C57]">
+            
 
-      {/* Sign-In Form Container */}
-      <div className='relative z-10 flex flex-col items-center justify-center px-4 bg-black/50'>
-        <div className='flex items-center justify-center mt-8'>
-          <ClerkLoaded>
-            <SignIn path='/sign-in' />
-          </ClerkLoaded>
-          <ClerkLoading>
-            <Loader2
-              className='animate-spin text-muted-foreground'
-              aria-label='Loading sign-in form'
-            />
-          </ClerkLoading>
-        </div>
-      </div>
-    </div>
-  );
-};
+            <div className="card-section flex flex-row flex-1 w-full max-w-5xl bg-blue-500 rounded-xl">
+            <div className="h-full  w-full flex justify-center p-5">
 
-export default SignInPage;
+            </div>
+            <div className="h-full">  
+            <ClerkLoaded>
+            <SignIn path="/sign-in" />
+            </ClerkLoaded>
+            <ClerkLoading><Loader2 className="animate-spin text-muted-foreground" /></ClerkLoading>
+            </div> 
+            </div>
+        </main>
+        </>
+    );
+}

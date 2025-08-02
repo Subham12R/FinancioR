@@ -1,15 +1,11 @@
 import { type Metadata } from 'next'
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from '@clerk/nextjs'
-import { dark, neobrutalism, shadcn } from '@clerk/themes'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, } from 'next/font/google'
 import './globals.css'
+import { QueryProvider } from '../../providers/query-provider'
+
 
 
 const geistSans = Geist({
@@ -23,8 +19,26 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Financio.',
-  description: 'A Finance Management App',
+  title: 'Authentication',
+  description: 'Clerk Based advanced authentication',
+}
+
+
+const localization = {
+  formButtonPrimary: 'Continue',
+  signUp: {
+    start: {
+      subtitle: 'Already have an account?',
+
+    },
+  }, 
+  signIn: {
+    start: {
+      title: "Welcome to the Dashboard",
+      subtitle: 'Sign in to access the Dashboard',
+
+    },
+  }     
 }
 
 export default function RootLayout({
@@ -34,24 +48,30 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-
+    localization={localization}
     
     appearance={{
-      baseTheme: dark,
-      variables: {
-        colorBorder: "#fafafa",
-        colorInput: "#fafafa",
-        colorPrimary: "#ff0000",
-        colorRing: "#ff0000",
-        colorText: "#ffffff",
-        colorTextSecondary: "#ffffff",
-        colorTextOnPrimaryBackground: "#ffffff"
-      } 
-      
-    }}>
+
+      elements: {
+      card: 'backdrop-blur-2xl bg-white/5 border border-white/20 shadow-2xl rounded-2xl p-6 text-white ',
+      formButtonPrimary: 'bg-amber-50 text-black hover:bg-white transition font-semibold py-2 px-4 rounded-lg',
+      headerTitle: 'text-white text-3xl font-bold mb-1',
+      headerSubtitle: 'text-amber-50 text-base mb-4',
+      socialButtonsBlockButton: 'bg-white/10 hover:bg-white/20 transition text-white font-medium rounded-lg',
+      footer: 'text-zinc-900 text-xs mt-6',
+      formFieldInput: 'bg-white/5 backdrop-blur-md text-white placeholder-white/70 border border-white/20 focus:ring-2 focus:ring-amber-50 rounded-lg px-4 py-2',
+      formFieldLabel: 'text-white mb-1 text-sm',
+      cardAlert: 'hidden', // hide deployment mode
+      clerk: 'hidden', // hide "Secured by Clerk"
+    },
+
+  }}
+    >
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          {children}
+          <QueryProvider>
+            {children}
+          </QueryProvider>
         </body>
       </html>
     </ClerkProvider>
