@@ -47,7 +47,7 @@ function SheetOverlay({
 function SheetContent({
   className,
   children,
-  side = "bottom",
+  side = "right",
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left"
@@ -58,12 +58,12 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-            "data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 transition ease-in-out shadow-xl border border-white/20 bg-white/10 backdrop-blur-lg rounded-t-2xl sm:rounded-none sm:border-none",
-            "text-white", // Ensures content is readable on translucent background
+            "data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 transition ease-in-out shadow-xl border border-white/20 bg-white/10 backdrop-blur-lg rounded-t-2xl sm:rounded-none sm:border-none overflow-y-auto",
+            "text-white p-5", // Ensures content is readable on translucent background
             side === "right" &&
               "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 sm:max-w-sm",
             side === "left" &&
-              "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 sm:max-w-sm",
+              "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-full lg:max-w-full",
             side === "top" &&
               "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b",
             side === "bottom" &&
