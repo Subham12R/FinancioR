@@ -1,4 +1,9 @@
+import { z } from "zod/v4";
+
 import { useNewAccount } from "../hooks/use-new-accounts";
+import { useCreateAccount } from "../api/use-create-accounts";
+import { insertAccountSchema } from "@/db/schema";
+import { AccountForm } from "./account-form";
 
 import {
     Sheet,
@@ -7,10 +12,7 @@ import {
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet";
-import { AccountForm } from "./account-form";
-import { insertAccountSchema } from "@/db/schema";
-import { z } from "zod";
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = insertAccountSchema.pick({
     name: true,   
 });
@@ -19,10 +21,14 @@ type FormValues = z.input<typeof formSchema>;
 export const NewAccountSheet = () => {
     
     const { isOpen, onClose } = useNewAccount();
+
+    const mutation = useCreateAccount();
     const onSubmit = (values: FormValues) => {
-        console.log("New Account Submitted:", values);
-        // Handle account creation logic here
-        onClose();
+        mutation.mutate(values, {
+            onSuccess: () => {
+                onClose();
+            },
+        });
     }
 
     
@@ -36,7 +42,7 @@ export const NewAccountSheet = () => {
                         Create a new account to manage your finances.
                     </SheetDescription>
                 </SheetHeader>
-                <AccountForm onSubmit={onSubmit} disabled={false} defaultValues={{ name: "" }} />
+                <AccountForm onSubmit={onSubmit} disabled={mutation.isPending} defaultValues={{ name: "" }} />
             </SheetContent>
         </Sheet>
     )
