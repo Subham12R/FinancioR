@@ -16,6 +16,7 @@ import {
 
 } from "@tanstack/react-table"
 
+import { useConfirm } from "../hooks/use-confirm"
 
 
 import { Button } from "@/components/ui/button"
@@ -47,6 +48,10 @@ export function DataTable<TData, TValue>({
   onDelete,
   disabled,
 }: DataTableProps<TData, TValue>) {
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Are you Sure",
+    "You are about to perform bulk delete.",
+  );
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -74,6 +79,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <ConfirmDialog />
       <div className="flex items-center py-4">
         <Input
           placeholder={`Filter ${filterkey}...`}
@@ -85,9 +91,12 @@ export function DataTable<TData, TValue>({
         />
         {table.getFilteredRowModel().rows.length > 0 && (
             <Button
-            onClick={() => {
+            onClick={async () => {
+                const ok = await confirm();
+                if (ok){
                 onDelete(table.getFilteredSelectedRowModel().rows);
                 table.resetRowSelection();
+                }
             }}
             disabled={disabled}
             size="sm"
