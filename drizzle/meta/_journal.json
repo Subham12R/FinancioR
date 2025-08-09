@@ -8,6 +8,13 @@
       "when": 1754727987926,
       "tag": "0000_odd_doorman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1754737652673,
+      "tag": "0001_cold_misty_knight",
+      "breakpoints": true
     }
   ]
 }

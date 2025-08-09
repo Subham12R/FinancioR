@@ -4,7 +4,7 @@ import { handle } from "hono/vercel";
 
 import accounts from './accounts';
 import categories from './categories';
-
+import transactions from './transactions';
 export const runtime = 'edge';
 export type AppType = typeof routes;
  
@@ -23,7 +23,8 @@ export const DELETE = handle(app);
 
 export const routes = app
   .route('/accounts', accounts)
-  .route('/categories', categories);
+  .route('/categories', categories)
+  .route('/transactions', transactions);
 
 
 
