@@ -17,16 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { insertTransactionSchema } from "@/db/schema";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
-import { useCreateAccount } from "@/features/accounts/api/use-create-accounts";
-import { useCreateCategory } from "@/features/categories/api/use-create-category";
 
 const formSchema = z.object({
   payee: z.string().min(1, "Payee is required"),
   amount: z.string().min(1, "Amount is required"),
-  date: z.coerce.date(),
+  date: z.string().min(1, "Date is required"),
   accountId: z.string().min(1, "Account is required"),
   categoryId: z.string().optional(),
   notes: z.string().optional(),
@@ -37,7 +34,8 @@ type FormValues = z.infer<typeof formSchema>;
 type Props = {
   id?: string;
   defaultValues?: Partial<FormValues>;
-  onSubmit: (data: FormValues) => void;
+  //eslint@typescript-eslint/no-explicit-any
+  onSubmit: (data: any) => void;
   onDelete?: () => void;
   disabled?: boolean;
 };
@@ -51,8 +49,6 @@ export const TransactionForm = ({
 }: Props) => {
   const accountsQuery = useGetAccounts();
   const categoriesQuery = useGetCategories();
-  const createAccountMutation = useCreateAccount();
-  const createCategoryMutation = useCreateCategory();
 
   const accounts = accountsQuery.data || [];
   const categories = categoriesQuery.data || [];
@@ -62,7 +58,7 @@ export const TransactionForm = ({
     defaultValues: {
       payee: "",
       amount: "",
-      date: new Date(),
+      date: new Date().toISOString().split('T')[0],
       accountId: "",
       categoryId: "",
       notes: "",
@@ -72,10 +68,16 @@ export const TransactionForm = ({
 
   const handleSubmit = (values: FormValues) => {
     const amount = parseFloat(values.amount);
+    
     const submitData = {
-      ...values,
+      payee: values.payee,
       amount: Math.round(amount * 100), // Convert to paise
+      date: new Date(values.date),
+      accountId: values.accountId,
+      categoryId: values.categoryId || null,
+      notes: values.notes || null,
     };
+    
     onSubmit(submitData);
   };
 
@@ -112,7 +114,7 @@ export const TransactionForm = ({
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Amount</FormLabel>
+              <FormLabel>Amount (₹)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -166,7 +168,7 @@ export const TransactionForm = ({
               <FormLabel>Category (optional)</FormLabel>
               <Select
                 disabled={disabled}
-                value={field.value}
+                value={field.value || ""}
                 onValueChange={field.onChange}
               >
                 <FormControl>
@@ -199,8 +201,7 @@ export const TransactionForm = ({
                 <Input
                   type="date"
                   disabled={disabled}
-                  value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : field.value}
-                  onChange={(e) => field.onChange(new Date(e.target.value))}
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
